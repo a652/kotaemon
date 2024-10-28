@@ -16,7 +16,8 @@ app = App()
 demo = app.make()
 demo.queue().launch(
     favicon_path=app._favicon,
-    inbrowser=True,
+    inbrowser=False,
+    share=True,
     allowed_paths=[
         "libs/ktem/ktem/assets",
         GRADIO_TEMP_DIR,

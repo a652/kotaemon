@@ -49,6 +49,10 @@ KH_CHUNKS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 KH_ZIP_OUTPUT_DIR = KH_APP_DATA_DIR / "zip_cache_dir"
 KH_ZIP_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
+# video cache directory
+KH_VIDEO_CACHE_DIR = KH_APP_DATA_DIR / "video_cache_dir"
+KH_VIDEO_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+
 # zip input directory
 KH_ZIP_INPUT_DIR = KH_APP_DATA_DIR / "zip_cache_dir_in"
 KH_ZIP_INPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -148,7 +152,7 @@ if config("OPENAI_API_KEY", default=""):
             "base_url": config("OPENAI_API_BASE", default="https://api.openai.com/v1"),
             "api_key": config("OPENAI_API_KEY", default=""),
             "model": config(
-                "OPENAI_EMBEDDINGS_MODEL", default="text-embedding-ada-002"
+                "OPENAI_EMBEDDINGS_MODEL", default="text-embedding-3-large"
             ),
             "timeout": 10,
             "context_length": 8191,
@@ -241,7 +245,7 @@ KH_EMBEDDINGS["cohere"] = {
 KH_RERANKINGS["cohere"] = {
     "spec": {
         "__type__": "kotaemon.rerankings.CohereReranking",
-        "model_name": "rerank-multilingual-v2.0",
+        "model_name": "rerank-multilingual-v3.0",
         "cohere_api_key": config("COHERE_API_KEY", default=""),
     },
     "default": True,
@@ -254,10 +258,13 @@ KH_REASONINGS = [
     "ktem.reasoning.rewoo.RewooAgentPipeline",
 ]
 KH_REASONINGS_USE_MULTIMODAL = False
-KH_VLM_ENDPOINT = "{0}/openai/deployments/{1}/chat/completions?api-version={2}".format(
+# KH_VLM_ENDPOINT = "{0}/openai/deployments/{1}/chat/completions?api-version={2}".format(
+#     config("AZURE_OPENAI_ENDPOINT", default=""),
+#     config("OPENAI_VISION_DEPLOYMENT_NAME", default="gpt-4o"),
+#     config("OPENAI_API_VERSION", default=""),
+# )
+KH_VLM_ENDPOINT = "{0}/chat/completions?".format(
     config("AZURE_OPENAI_ENDPOINT", default=""),
-    config("OPENAI_VISION_DEPLOYMENT_NAME", default="gpt-4o"),
-    config("OPENAI_API_VERSION", default=""),
 )
 
 
@@ -273,8 +280,8 @@ SETTINGS_REASONING = {
     },
     "lang": {
         "name": "Language",
-        "value": "en",
-        "choices": [("English", "en"), ("Japanese", "ja"), ("Vietnamese", "vi")],
+        "value": "zh",
+        "choices": [("English", "en"), ("Japanese", "ja"), ("Vietnamese", "vi"), ("Chinese", "zh")],
         "component": "dropdown",
     },
     "max_context_length": {
@@ -295,7 +302,7 @@ KH_INDICES = [
         "config": {
             "supported_file_types": (
                 ".png, .jpeg, .jpg, .tiff, .tif, .pdf, .xls, .xlsx, .doc, .docx, "
-                ".pptx, .csv, .html, .mhtml, .txt, .md, .zip"
+                ".pptx, .csv, .html, .mhtml, .txt, .md, .zip, .mp4"
             ),
             "private": False,
         },
